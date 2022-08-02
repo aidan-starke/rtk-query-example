@@ -1,9 +1,9 @@
 import type { NextPage } from "next";
-import { useGetBlocksQuery } from "../api/generated";
+import { useGetBlocksQuery } from "@/libs/api/generated";
 import { useEffect, useMemo, useState } from "react";
-import { Block } from "../components";
+import { Block } from "@/libs/components";
 
-import type { AcalaBlock, AcalaBlocks } from "../types";
+import type { AcalaBlock, AcalaBlocks } from "@/libs/types";
 
 const Home: NextPage = () => {
 	const { data, isFetching } = useGetBlocksQuery(undefined, {
@@ -17,14 +17,15 @@ const Home: NextPage = () => {
 	);
 
 	return (
-		<div className="h-screen w-2/3 p-8 m-auto">
+		<div className="h-screen min-w-fit max-w-4xl p-8 m-auto">
 			<h1 className="text-2xl font-mono">Blocks</h1>
-			<div className="border-2 rounded h-full overflow-y-auto p-4">
-				{isFetched ? (
+			<div className="border-2 rounded h-full overflow-y-auto p-2">
+				{isFetched && blocks ? (
 					<>
 						{(blocks as Array<AcalaBlock>).map(
 							({ id, number, timestamp, parentHash }) => (
 								<Block
+									key={id}
 									hash={id}
 									height={number}
 									timestamp={timestamp}

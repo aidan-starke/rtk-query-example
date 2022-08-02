@@ -20,14 +20,19 @@ export const Block: FC<BlockProps> = ({
 	);
 
 	return (
-		<div className="p-4 flex items-center">
+		<div className="p-4 flex items-center border-b">
 			<div className="flex-1">
-				<p>{height}</p>
-				<p>{blockAge}</p>
+				<p className="text-blue-600">{height}</p>
+				<p className="text-sm">{blockAge}</p>
 			</div>
-			<div className="font-mono">
-				<p>Hash: {hash}</p>
-				<p>Parent: {parentHash}</p>
+			<div>
+				<p>
+					Hash: <span className="font-mono text-sm text-blue-600">{hash}</span>
+				</p>
+				<p>
+					Parent:{" "}
+					<span className="font-mono text-sm text-blue-600">{parentHash}</span>
+				</p>
 			</div>
 		</div>
 	);
