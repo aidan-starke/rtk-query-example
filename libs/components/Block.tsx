@@ -6,7 +6,7 @@ interface BlockProps {
 	height: number | null | undefined;
 	timestamp: string | null | undefined;
 	parentHash: string | null | undefined;
-	extrinsics: ((string | undefined)[] | undefined)[] | undefined;
+	extrinsics: (string | undefined)[];
 }
 
 export const Block: FC<BlockProps> = ({
@@ -39,8 +39,12 @@ export const Block: FC<BlockProps> = ({
 			</div>
 
 			<div className="text-sm flex">
-				<p className="font-mono text-gray-500">{extrinsics?.length ?? 0}</p>
-				&nbsp;<p>transactions</p>
+				<p>
+					<span className="font-mono text-gray-500">
+						{extrinsics?.length ?? 0}
+					</span>{" "}
+					{extrinsics?.length === 1 ? "transaction" : "transactions"}
+				</p>
 			</div>
 
 			<div className="text-sm space-y-px">
