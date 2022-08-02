@@ -1,4 +1,4 @@
-## RTQ Query Example
+## RTK Query Example
 
 ### Process
 
