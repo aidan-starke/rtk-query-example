@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import { useGetBlocksQuery } from "@/libs/api/generated";
+import { GetBlocksQuery, useGetBlocksQuery } from "@/libs/api/generated";
 import { useEffect, useMemo, useState } from "react";
 import { Block } from "@/libs/components";
 
@@ -10,19 +10,7 @@ const Home: NextPage = () => {
 		pollingInterval: 5000,
 	});
 	const isFetched = useIsFetched(isFetching);
-
-	const blocks = useMemo<AcalaBlocks | undefined>(
-		() => data?.blocks?.nodes,
-		[data]
-	);
-
-	const extrinsics = useMemo(
-		() =>
-			blocks?.map((block) =>
-				block?.extrinsics?.edges?.map(({ node }) => node?.id)
-			),
-		[blocks]
-	);
+	const { blocks, extrinsics } = useBlockData(data);
 
 	return (
 		<div className="h-screen p-8 m-auto">
@@ -63,4 +51,21 @@ const useIsFetched = (isFetching: boolean) => {
 	}, [isFetched, isFetching]);
 
 	return isFetched;
+};
+
+const useBlockData = (data: GetBlocksQuery | undefined) => {
+	const blocks = useMemo<AcalaBlocks | undefined>(
+		() => data?.blocks?.nodes,
+		[data]
+	);
+
+	const extrinsics = useMemo(
+		() =>
+			blocks
+				?.map((block) => block?.extrinsics?.edges?.map(({ node }) => node?.id))
+				.filter((e) => e?.length),
+		[blocks]
+	);
+
+	return { blocks, extrinsics };
 };
