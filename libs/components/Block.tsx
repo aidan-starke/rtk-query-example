@@ -35,13 +35,12 @@ export const Block: FC<BlockProps> = ({
 					<p className="text-sm">{blockAge}</p>
 				</div>
 			</div>
-			<div>
+			<div className="text-sm space-y-px">
 				<p>
-					Hash: <span className="font-mono text-sm text-gray-500">{hash}</span>
+					Hash: <span className="font-mono text-gray-500">{hash}</span>
 				</p>
 				<p>
-					Parent:{" "}
-					<span className="font-mono text-sm text-gray-500">{parentHash}</span>
+					Parent: <span className="font-mono text-gray-500">{parentHash}</span>
 				</p>
 			</div>
 		</div>
