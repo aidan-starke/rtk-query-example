@@ -12732,7 +12732,7 @@ export type GetBlocksQuery = {
 
 export const GetBlocksDocument = `
     query GetBlocks {
-  blocks {
+  blocks(orderBy: NUMBER_DESC) {
     nodes {
       id
       number
