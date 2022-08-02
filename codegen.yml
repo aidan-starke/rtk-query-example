@@ -1,0 +1,12 @@
+overwrite: true
+schema: "https://api.subquery.network/sq/AcalaNetwork/acala"
+documents: ./queries/*.graphql
+generates:
+  ./api/generated.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-rtk-query
+    config:
+      importBaseApiFrom: "./baseApi"
+      exportHooks: true

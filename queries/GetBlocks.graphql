@@ -1,0 +1,10 @@
+query GetBlocks {
+	blocks {
+		nodes {
+			id
+			number
+			timestamp
+			parentHash
+		}
+	}
+}
