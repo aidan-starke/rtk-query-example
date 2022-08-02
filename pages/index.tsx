@@ -44,7 +44,7 @@ const Home: NextPage = () => {
 						)}
 					</>
 				) : (
-					<p className="font-mono">Loading...</p>
+					<p className="font-mono p-4">Loading...</p>
 				)}
 			</div>
 		</div>
