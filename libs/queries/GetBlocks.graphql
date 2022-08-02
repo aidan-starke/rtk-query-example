@@ -5,6 +5,13 @@ query GetBlocks {
 			number
 			timestamp
 			parentHash
+			extrinsics {
+				edges {
+					node {
+						id
+					}
+				}
+			}
 		}
 	}
 }

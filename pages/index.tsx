@@ -16,10 +16,18 @@ const Home: NextPage = () => {
 		[data]
 	);
 
+	const extrinsics = useMemo(
+		() =>
+			blocks?.map((block) =>
+				block?.extrinsics?.edges?.map(({ node }) => node?.id)
+			),
+		[blocks]
+	);
+
 	return (
-		<div className="h-screen min-w-fit max-w-4xl p-8 m-auto">
-			<h1 className="text-2xl font-mono">Blocks</h1>
-			<div className="border-2 rounded h-full overflow-y-auto p-2">
+		<div className="h-screen p-8 m-auto">
+			<div className="border-2 rounded h-full overflow-y-auto p-2 max-w-4xl m-auto">
+				<h1 className="text-xl font-mono p-4">Latest Blocks</h1>
 				{isFetched && blocks ? (
 					<>
 						{(blocks as Array<AcalaBlock>).map(
@@ -30,6 +38,7 @@ const Home: NextPage = () => {
 									height={number}
 									timestamp={timestamp}
 									parentHash={parentHash}
+									extrinsics={extrinsics}
 								/>
 							)
 						)}
