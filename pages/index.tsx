@@ -1,9 +1,9 @@
 import type { NextPage } from "next";
-import { api } from "../api/generated";
+import { useGetBlocksQuery } from "../api/generated";
 import JSONPretty from "react-json-pretty";
 
 const Home: NextPage = () => {
-	const { data, isFetching } = api.endpoints.GetBlocks.useQuery();
+	const { data, isFetching } = useGetBlocksQuery();
 
 	return (
 		<div className="h-screen w-2/3 p-8 m-auto">
