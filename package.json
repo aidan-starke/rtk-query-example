@@ -13,6 +13,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.3",
     "@rtk-query/graphql-request-base-query": "^2.2.0",
+    "ethers": "^5.6.9",
     "graphql": "^16.5.0",
     "graphql-request": "^4.3.0",
     "moment": "^2.29.4",

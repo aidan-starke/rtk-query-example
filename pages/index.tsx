@@ -1,41 +1,68 @@
 import type { NextPage } from "next";
-import { useGetBlocksQuery } from "@/libs/api/generated";
+import { useGetBlocksQuery, useGetTransfersQuery } from "@/libs/api/generated";
 import { useEffect, useMemo, useState } from "react";
-import { Block } from "@/libs/components";
-
-import type { AcalaBlock, AcalaBlocks } from "@/libs/types";
+import { Block, Transfer } from "@/libs/components";
 
 const Home: NextPage = () => {
-	const { data, isFetching } = useGetBlocksQuery(undefined, {
-		pollingInterval: 5000,
-	});
-	const isFetched = useIsFetched(isFetching);
+	const { data: blockData, isFetching: blocksFetching } = useGetBlocksQuery(
+		undefined,
+		{
+			pollingInterval: 5000,
+		}
+	);
+	const blocksFetched = useIsFetched(blocksFetching);
 
-	const blocks = useMemo<AcalaBlocks | undefined>(
-		() => data?.blocks?.nodes,
-		[data]
+	const { data: transferData, isFetching: transfersFetching } =
+		useGetTransfersQuery(undefined, {
+			pollingInterval: 5000,
+		});
+	const transfersFetched = useIsFetched(transfersFetching);
+
+	const blocks = useMemo(() => blockData?.blocks?.nodes, [blockData]);
+
+	const transfers = useMemo(
+		() => transferData?.transfers?.nodes,
+		[transferData]
 	);
 
 	return (
-		<div className="h-screen p-8 m-auto">
-			<div className="border-2 rounded h-full overflow-y-auto p-2 max-w-4xl m-auto">
+		<div className="h-screen p-8 m-auto grid grid-cols-2 gap-4">
+			<div className="border-2 rounded h-full overflow-y-auto p-2">
 				<h1 className="text-xl font-mono p-4">Latest Blocks</h1>
-				{isFetched && blocks ? (
+				{blocksFetched && blocks ? (
 					<>
-						{(blocks as Array<AcalaBlock>).map(
-							({ id, number, timestamp, parentHash, extrinsics }) => (
-								<Block
-									key={id}
-									hash={id}
-									height={number}
-									timestamp={timestamp}
-									parentHash={parentHash}
-									extrinsics={extrinsics?.edges
-										?.map(({ node }) => node?.id)
-										.filter((e) => e?.length)}
-								/>
-							)
-						)}
+						{blocks.map((block) => (
+							<Block
+								key={block?.id}
+								hash={block?.id}
+								height={block?.number}
+								timestamp={block?.timestamp}
+								parentHash={block?.parentHash}
+								extrinsics={block?.extrinsics?.edges
+									?.map(({ node }) => node?.id)
+									.filter((e) => e?.length)}
+							/>
+						))}
+					</>
+				) : (
+					<p className="font-mono p-4">Loading...</p>
+				)}
+			</div>
+			<div className="border-2 rounded h-full overflow-y-auto p-2">
+				<h1 className="text-xl font-mono p-4">Latest Transactions</h1>
+				{transfersFetched && transfers ? (
+					<>
+						{transfers.map((transfer) => (
+							<Transfer
+								key={transfer?.id}
+								hash={transfer?.id}
+								timestamp={transfer?.timestamp}
+								from={transfer?.fromId}
+								to={transfer?.toId}
+								amount={transfer?.amount}
+								token={transfer?.tokenId}
+							/>
+						))}
 					</>
 				) : (
 					<p className="font-mono p-4">Loading...</p>

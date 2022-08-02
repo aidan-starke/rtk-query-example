@@ -1,12 +1,12 @@
-import { FC, useEffect, useMemo } from "react";
+import { FC, useMemo } from "react";
 import moment from "moment";
 
 interface BlockProps {
-	hash: string;
-	height: number | null | undefined;
-	timestamp: string | null | undefined;
+	hash: string | undefined;
+	height: number | undefined;
+	timestamp: string | undefined;
 	parentHash: string | null | undefined;
-	extrinsics: (string | undefined)[];
+	extrinsics: (string | undefined)[] | undefined;
 }
 
 export const Block: FC<BlockProps> = ({
@@ -24,7 +24,7 @@ export const Block: FC<BlockProps> = ({
 	return (
 		<div className="p-4 grid grid-cols-3 items-center border-b">
 			<div className="flex space-x-2">
-				<div className="bg-gray-300 h-12 w-12 flex items-center rounded">
+				<div className="bg-gray-200 h-12 w-12 flex items-center rounded">
 					<p className="text-center w-full">Bk</p>
 				</div>
 				<div>

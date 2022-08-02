@@ -12737,6 +12737,24 @@ export type GetBlocksQuery = {
 	} | null;
 };
 
+export type GetTransfersQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetTransfersQuery = {
+	__typename?: "Query";
+	transfers?: {
+		__typename?: "TransfersConnection";
+		nodes: Array<{
+			__typename?: "Transfer";
+			id: string;
+			fromId?: string | null;
+			toId?: string | null;
+			tokenId?: string | null;
+			amount?: string | null;
+			timestamp?: any | null;
+		} | null>;
+	} | null;
+};
+
 export const GetBlocksDocument = `
     query GetBlocks {
   blocks(orderBy: NUMBER_DESC) {
@@ -12756,14 +12774,39 @@ export const GetBlocksDocument = `
   }
 }
     `;
+export const GetTransfersDocument = `
+    query GetTransfers {
+  transfers(orderBy: TIMESTAMP_DESC) {
+    nodes {
+      id
+      fromId
+      toId
+      tokenId
+      amount
+      timestamp
+    }
+  }
+}
+    `;
 
 const injectedRtkApi = api.injectEndpoints({
 	endpoints: (build) => ({
 		GetBlocks: build.query<GetBlocksQuery, GetBlocksQueryVariables | void>({
 			query: (variables) => ({ document: GetBlocksDocument, variables }),
 		}),
+		GetTransfers: build.query<
+			GetTransfersQuery,
+			GetTransfersQueryVariables | void
+		>({
+			query: (variables) => ({ document: GetTransfersDocument, variables }),
+		}),
 	}),
 });
 
 export { injectedRtkApi as api };
-export const { useGetBlocksQuery, useLazyGetBlocksQuery } = injectedRtkApi;
+export const {
+	useGetBlocksQuery,
+	useLazyGetBlocksQuery,
+	useGetTransfersQuery,
+	useLazyGetTransfersQuery,
+} = injectedRtkApi;
