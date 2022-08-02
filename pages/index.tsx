@@ -51,7 +51,7 @@ const useIsFetched = (isFetching: boolean) => {
 		if (isFetched) return;
 
 		setIsFetched(!isFetching);
-	}, [isFetching]);
+	}, [isFetched, isFetching]);
 
 	return isFetched;
 };
