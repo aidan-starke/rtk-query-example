@@ -74,8 +74,8 @@ const Block: NextPage<BlockProps> = ({ block, extrinsics }) => {
 					<p>Age</p>
 				</TableRow>
 				{extrinsics.map((extrinsic) => (
-					<TableRow rowClassName="space-y-px">
-						<Extrinsic extrinsic={extrinsic} key={extrinsic?.id} />
+					<TableRow rowClassName="space-y-px" key={extrinsic?.id}>
+						<Extrinsic extrinsic={extrinsic} />
 					</TableRow>
 				))}
 			</div>
