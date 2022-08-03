@@ -6,9 +6,12 @@ export const usePolling = <T>(
 	pollingInterval: number = 5000,
 	queryParams?: Record<string, unknown>
 ) => {
-	const { data } = queryFunction(queryParams, {
+	const { data, isFetching } = queryFunction(queryParams, {
 		pollingInterval,
 	});
 
-	return useMemo<T>(() => (data ? data : initialData), [initialData]);
+	return useMemo<T>(
+		() => (data ? data : initialData),
+		[data, initialData, isFetching]
+	);
 };
