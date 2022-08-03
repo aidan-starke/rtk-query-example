@@ -1,5 +1,5 @@
 query GetBlocks {
-	blocks(orderBy: NUMBER_DESC) {
+	blocks(orderBy: NUMBER_DESC, first: 20) {
 		nodes {
 			id
 			number

@@ -12810,7 +12810,7 @@ export const GetBlockByIdDocument = `
     `;
 export const GetBlocksDocument = `
     query GetBlocks {
-  blocks(orderBy: NUMBER_DESC) {
+  blocks(orderBy: NUMBER_DESC, first: 20) {
     nodes {
       id
       number
@@ -12842,7 +12842,7 @@ export const GetExtrinsicByIdDocument = `
     `;
 export const GetTransfersDocument = `
     query GetTransfers {
-  transfers(orderBy: TIMESTAMP_DESC) {
+  transfers(orderBy: TIMESTAMP_DESC, first: 20) {
     nodes {
       id
       fromId
