@@ -1,7 +1,7 @@
 import { FC, useMemo } from "react";
-import moment from "moment";
 
 import { utils as ethers } from "ethers";
+import { getDistance } from "@/utils";
 
 interface TransferProps {
 	timestamp: string | undefined;
@@ -18,11 +18,6 @@ export const Transfer: FC<TransferProps> = ({
 	amount,
 	token,
 }) => {
-	const transferAge = useMemo<string | undefined>(
-		() => moment(timestamp).fromNow(),
-		[timestamp]
-	);
-
 	const value = useMemo(() => {
 		if (!amount) return 0;
 		if (token?.includes("DOT")) return ethers.formatUnits(amount, 10);
@@ -39,7 +34,7 @@ export const Transfer: FC<TransferProps> = ({
 					<p className="text-center w-full">Tx</p>
 				</div>
 				<div className="flex items-center">
-					<p className="text-sm">{transferAge}</p>
+					<p className="text-sm">{getDistance(timestamp as string)}</p>
 				</div>
 			</div>
 

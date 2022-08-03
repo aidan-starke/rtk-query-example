@@ -1,6 +1,7 @@
 import { formatDistance } from "date-fns";
+import { zonedTimeToUtc } from "date-fns-tz";
 
 export const getDistance = (timestamp: string) =>
-	formatDistance(new Date(timestamp).getUTCDate(), new Date().getUTCDate(), {
+	formatDistance(zonedTimeToUtc(timestamp, "UTC"), new Date(), {
 		addSuffix: true,
 	});
