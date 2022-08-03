@@ -1,32 +1,19 @@
 import type { NextPage } from "next";
 import { GetBlockByIdQuery, GetExtrinsicByIdQuery } from "@/libs/api/generated";
-import { State, store, wrapper } from "@/libs/store";
+import { State, wrapper } from "@/libs/store";
 import { api } from "@/libs/api/generated";
 import { connect } from "react-redux";
 import { Extrinsic } from "@/libs/components";
 import { FC, ReactNode } from "react";
 import clsx from "clsx";
 
-export const getStaticPaths = async () => {
-	const { data } = await store.dispatch(api.endpoints.GetBlocks.initiate());
-	await Promise.all(api.util.getRunningOperationPromises());
-
-	return {
-		paths: data?.blocks?.nodes.map((block) => ({
-			params: { hash: block?.id },
-		})),
-		fallback: false,
-	};
-};
-
-export const getStaticProps = wrapper.getStaticProps(
+export const getServerSideProps = wrapper.getServerSideProps(
 	(store) => async (context) => {
 		const { data: blockData } = await store.dispatch(
 			api.endpoints.GetBlockById.initiate({
 				id: context?.params?.hash as string,
 			})
 		);
-
 		const extrinsics = await Promise.all(
 			(blockData?.block?.extrinsics?.edges as any)?.map(
 				async ({ node }: { node: { id: string } }) =>
@@ -37,7 +24,6 @@ export const getStaticProps = wrapper.getStaticProps(
 					)
 			)
 		);
-
 		await Promise.all(api.util.getRunningOperationPromises());
 
 		return {
@@ -45,14 +31,13 @@ export const getStaticProps = wrapper.getStaticProps(
 				block: blockData?.block,
 				extrinsics: extrinsics.map((extrinsic) => extrinsic?.data?.extrinsic),
 			},
-			revalidate: 300,
 		};
 	}
 );
 
 interface BlockProps {
 	block: GetBlockByIdQuery["block"];
-	extrinsics: GetExtrinsicByIdQuery["extrinsic"][];
+	extrinsics: Array<GetExtrinsicByIdQuery["extrinsic"]>;
 }
 
 const Block: NextPage<BlockProps> = ({ block, extrinsics }) => {
@@ -74,7 +59,7 @@ const Block: NextPage<BlockProps> = ({ block, extrinsics }) => {
 					<p>Signer</p>
 					<p>Age</p>
 				</TableRow>
-				{extrinsics.map((extrinsic) => (
+				{extrinsics?.map((extrinsic) => (
 					<TableRow rowClassName="space-y-px" key={extrinsic?.id}>
 						<Extrinsic extrinsic={extrinsic} />
 					</TableRow>
