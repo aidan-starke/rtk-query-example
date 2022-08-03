@@ -45,6 +45,7 @@ export const getStaticProps = wrapper.getStaticProps(
 				block: blockData?.block,
 				extrinsics: extrinsics.map((extrinsic) => extrinsic?.data?.extrinsic),
 			},
+			revalidate: 300,
 		};
 	}
 );
