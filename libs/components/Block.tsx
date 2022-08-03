@@ -1,5 +1,5 @@
 import { FC } from "react";
-import moment from "moment";
+import { getDistance } from "@/utils";
 
 interface BlockProps {
 	hash: string | undefined;
@@ -26,7 +26,7 @@ export const Block: FC<BlockProps> = ({
 					<a className="text-blue-600" href={`/transactions/${hash}`}>
 						{height}
 					</a>
-					<p className="text-sm">{moment(timestamp).fromNow()}</p>
+					<p className="text-sm">{getDistance(timestamp as string)}</p>
 				</div>
 			</div>
 

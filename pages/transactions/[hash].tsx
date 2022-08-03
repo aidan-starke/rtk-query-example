@@ -3,9 +3,9 @@ import { GetBlockByIdQuery, GetExtrinsicByIdQuery } from "@/libs/api/generated";
 import { State, store, wrapper } from "@/libs/store";
 import { api } from "@/libs/api/generated";
 import { connect } from "react-redux";
-import moment from "moment";
 import { FC, ReactNode } from "react";
 import clsx from "clsx";
+import { getDistance } from "@/utils";
 
 export const getStaticPaths = async () => {
 	const { data } = await store.dispatch(api.endpoints.GetBlocks.initiate());
@@ -84,7 +84,7 @@ const Block: NextPage<BlockProps> = ({ block, extrinsics }) => {
 						<p className="text-sm font-mono text-gray-500 truncate">
 							{ext?.signerId}
 						</p>
-						<p>{moment(ext?.timestamp).fromNow()}</p>
+						<p>{getDistance(ext?.timestamp as string)}</p>
 					</TableRow>
 				))}
 			</div>
