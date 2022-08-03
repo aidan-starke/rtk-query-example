@@ -3,9 +3,7 @@ import { GetBlockByIdQuery, GetExtrinsicByIdQuery } from "@/libs/api/generated";
 import { State, store, wrapper } from "@/libs/store";
 import { api } from "@/libs/api/generated";
 import { connect } from "react-redux";
-import { FC, ReactNode } from "react";
-import clsx from "clsx";
-import { getDistance } from "@/utils";
+import { Layout, Extrinsic } from "@/libs/components";
 
 export const getStaticPaths = async () => {
 	const { data } = await store.dispatch(api.endpoints.GetBlocks.initiate());
@@ -67,25 +65,14 @@ const Block: NextPage<BlockProps> = ({ block, extrinsics }) => {
 				</p>
 			</div>
 			<div className="border-2 rounded h-full p-2 overflow-y-auto">
-				<TableRow rowClassName="text-lg">
+				<Layout.TableRow rowClassName="text-lg">
 					<p>Tx Hash</p>
 					<p>Method</p>
 					<p>Signer</p>
 					<p>Age</p>
-				</TableRow>
-				{extrinsics.map((ext) => (
-					<TableRow key={ext?.id} rowClassName="space-y-px">
-						<p className="truncate text-sm font-mono text-gray-500">
-							{ext?.id}
-						</p>
-						<p>
-							{ext?.section}.{ext?.method}
-						</p>
-						<p className="text-sm font-mono text-gray-500 truncate">
-							{ext?.signerId}
-						</p>
-						<p>{getDistance(ext?.timestamp as string)}</p>
-					</TableRow>
+				</Layout.TableRow>
+				{extrinsics.map((extrinsic) => (
+					<Extrinsic extrinsic={extrinsic} key={extrinsic?.id} />
 				))}
 			</div>
 		</div>
@@ -93,19 +80,3 @@ const Block: NextPage<BlockProps> = ({ block, extrinsics }) => {
 };
 
 export default connect((state: State) => state)(Block);
-
-interface TableRowProps {
-	children: ReactNode;
-	rowClassName?: string;
-}
-
-const TableRow: FC<TableRowProps> = ({ children, rowClassName }) => (
-	<div
-		className={clsx(
-			rowClassName,
-			"grid grid-cols-4 gap-4 border-b items-center p-4 space-x-4"
-		)}
-	>
-		{children}
-	</div>
-);
