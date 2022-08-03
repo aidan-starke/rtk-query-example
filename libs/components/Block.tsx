@@ -28,7 +28,7 @@ export const Block: FC<BlockProps> = ({
 					<p className="text-center w-full">Bk</p>
 				</div>
 				<div>
-					<a className="text-blue-600" href={`/block/${hash}`}>
+					<a className="text-blue-600" href={`/transactions/${hash}`}>
 						{height}
 					</a>
 					<p className="text-sm">{blockAge}</p>

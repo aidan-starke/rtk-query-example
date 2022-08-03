@@ -19,32 +19,34 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps = wrapper.getStaticProps(
 	(store) => async (context) => {
-		const hash = context?.params?.hash as string;
 		const { data } = await store.dispatch(
-			api.endpoints.GetBlockById.initiate({ id: hash })
+			api.endpoints.GetBlockById.initiate({
+				id: context?.params?.hash as string,
+			})
 		);
 		await Promise.all(api.util.getRunningOperationPromises());
 
 		return {
 			props: {
-				hash,
 				block: data?.block,
 			},
 		};
 	}
 );
 
-const Block: NextPage<{ hash: string; block: GetBlockByIdQuery["block"] }> = ({
-	hash,
-	block,
-}) => {
+const Block: NextPage<{ block: GetBlockByIdQuery["block"] }> = ({ block }) => {
 	return (
-		<div className="h-screen p-8 m-auto">
+		<div className="h-screen p-8 m-auto space-y-4">
+			<div>
+				<h1 className="text-xl">Transactions</h1>
+				<p>
+					For block{" "}
+					<span className="font-mono text-sm text-gray-500">
+						{block?.number}
+					</span>
+				</p>
+			</div>
 			<div className="border-2 rounded h-full overflow-y-auto p-2">
-				<h1 className="text-lg p-4">
-					Hash:{" "}
-					<span className="font-mono text-base text-gray-500">{hash}</span>
-				</h1>
 				<JSONPretty data={block} className="p-4" />
 			</div>
 		</div>
