@@ -12714,6 +12714,26 @@ export type _Metadata = {
 	targetHeight?: Maybe<Scalars["Int"]>;
 };
 
+export type GetBlockByIdQueryVariables = Exact<{
+	id: Scalars["String"];
+}>;
+
+export type GetBlockByIdQuery = {
+	__typename?: "Query";
+	block?: {
+		__typename?: "Block";
+		id: string;
+		number?: any | null;
+		extrinsics: {
+			__typename?: "ExtrinsicsConnection";
+			edges: Array<{
+				__typename?: "ExtrinsicsEdge";
+				node?: { __typename?: "Extrinsic"; id: string } | null;
+			}>;
+		};
+	} | null;
+};
+
 export type GetBlocksQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetBlocksQuery = {
@@ -12755,6 +12775,21 @@ export type GetTransfersQuery = {
 	} | null;
 };
 
+export const GetBlockByIdDocument = `
+    query GetBlockById($id: String!) {
+  block(id: $id) {
+    id
+    number
+    extrinsics(orderBy: TIMESTAMP_DESC) {
+      edges {
+        node {
+          id
+        }
+      }
+    }
+  }
+}
+    `;
 export const GetBlocksDocument = `
     query GetBlocks {
   blocks(orderBy: NUMBER_DESC) {
@@ -12791,6 +12826,9 @@ export const GetTransfersDocument = `
 
 const injectedRtkApi = api.injectEndpoints({
 	endpoints: (build) => ({
+		GetBlockById: build.query<GetBlockByIdQuery, GetBlockByIdQueryVariables>({
+			query: (variables) => ({ document: GetBlockByIdDocument, variables }),
+		}),
 		GetBlocks: build.query<GetBlocksQuery, GetBlocksQueryVariables | void>({
 			query: (variables) => ({ document: GetBlocksDocument, variables }),
 		}),
@@ -12805,6 +12843,8 @@ const injectedRtkApi = api.injectEndpoints({
 
 export { injectedRtkApi as api };
 export const {
+	useGetBlockByIdQuery,
+	useLazyGetBlockByIdQuery,
 	useGetBlocksQuery,
 	useLazyGetBlocksQuery,
 	useGetTransfersQuery,

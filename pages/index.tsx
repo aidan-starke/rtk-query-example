@@ -1,5 +1,9 @@
 import type { NextPage } from "next";
-import { useGetBlocksQuery, useGetTransfersQuery } from "@/libs/api/generated";
+import {
+	useGetBlockByIdQuery,
+	useGetBlocksQuery,
+	useGetTransfersQuery,
+} from "@/libs/api/generated";
 import { useEffect, useMemo, useState } from "react";
 import { Block, Transfer } from "@/libs/components";
 
@@ -19,6 +23,16 @@ const Home: NextPage = () => {
 	const transfersFetched = useIsFetched(transfersFetching);
 
 	const blocks = useMemo(() => blockData?.blocks?.nodes, [blockData]);
+
+	const { data } = useGetBlockByIdQuery({
+		id: "0xb405fa0c81a7b5810e27f9d503849a4fd827cc21c678d41d759eb2e3ec57b992",
+	});
+
+	useEffect(() => {
+		if (!data) return;
+
+		console.log({ data });
+	}, [data]);
 
 	const transfers = useMemo(
 		() => transferData?.transfers?.nodes,
@@ -55,7 +69,6 @@ const Home: NextPage = () => {
 						{transfers.map((transfer) => (
 							<Transfer
 								key={transfer?.id}
-								hash={transfer?.id}
 								timestamp={transfer?.timestamp}
 								from={transfer?.fromId}
 								to={transfer?.toId}
