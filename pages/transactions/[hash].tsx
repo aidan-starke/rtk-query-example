@@ -81,7 +81,9 @@ const Block: NextPage<BlockProps> = ({ block, extrinsics }) => {
 						<p>
 							{ext?.section}.{ext?.method}
 						</p>
-						<p className="text-sm font-mono text-gray-500">{ext?.signerId}</p>
+						<p className="text-sm font-mono text-gray-500 truncate">
+							{ext?.signerId}
+						</p>
 						<p>{moment(ext?.timestamp).fromNow()}</p>
 					</TableRow>
 				))}

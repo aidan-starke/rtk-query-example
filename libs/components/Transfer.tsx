@@ -44,11 +44,11 @@ export const Transfer: FC<TransferProps> = ({
 			</div>
 
 			<div className="text-sm space-y-px">
-				<p>
+				<p className="truncate">
 					From&nbsp;
 					<span className="font-mono text-gray-500 text-xs">{from}</span>
 				</p>
-				<p>
+				<p className="truncate">
 					To&nbsp;
 					<span className="font-mono text-gray-500 text-xs">{to}</span>
 				</p>
