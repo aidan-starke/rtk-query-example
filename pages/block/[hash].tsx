@@ -41,8 +41,11 @@ const Block: NextPage<{ hash: string; block: GetBlockByIdQuery["block"] }> = ({
 	return (
 		<div className="h-screen p-8 m-auto">
 			<div className="border-2 rounded h-full overflow-y-auto p-2">
-				<h1 className="text-xl font-mono p-4">Latest Blocks</h1>
-				<JSONPretty data={{ [hash]: block }} className="p-4" />
+				<h1 className="text-lg p-4">
+					Hash:{" "}
+					<span className="font-mono text-base text-gray-500">{hash}</span>
+				</h1>
+				<JSONPretty data={block} className="p-4" />
 			</div>
 		</div>
 	);
