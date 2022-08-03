@@ -1,10 +1,5 @@
 import type { NextPage } from "next";
-import {
-	GetBlocksQuery,
-	GetTransfersQuery,
-	useGetTransfersQuery,
-} from "@/libs/api/generated";
-import { useEffect, useMemo, useState } from "react";
+import { GetBlocksQuery, GetTransfersQuery } from "@/libs/api/generated";
 import { Block, Transfer } from "@/libs/components";
 import { wrapper, State } from "@/libs/store";
 import { connect } from "react-redux";
@@ -83,15 +78,3 @@ const Home: NextPage<HomeProps> = ({ blocks, transfers }) => {
 };
 
 export default connect((state: State) => state)(Home);
-
-const useIsFetched = (isFetching: boolean) => {
-	const [isFetched, setIsFetched] = useState<boolean>(false);
-
-	useEffect(() => {
-		if (isFetched) return;
-
-		setIsFetched(!isFetching);
-	}, [isFetched, isFetching]);
-
-	return isFetched;
-};
