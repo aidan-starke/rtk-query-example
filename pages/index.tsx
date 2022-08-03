@@ -11,25 +11,6 @@ import { connect } from "react-redux";
 import { api } from "@/libs/api/generated";
 import { usePolling } from "@/libs/hooks";
 
-export const getServerSideProps = wrapper.getServerSideProps(
-	(store) => async () => {
-		const { data: blocksData } = await store.dispatch(
-			api.endpoints.GetBlocks.initiate()
-		);
-		const { data: transfersData } = await store.dispatch(
-			api.endpoints.GetTransfers.initiate()
-		);
-		await Promise.all(api.util.getRunningOperationPromises());
-
-		return {
-			props: {
-				initialBlocks: blocksData,
-				transfers: transfersData,
-			},
-		};
-	}
-);
-
 interface HomeProps {
 	initialBlocks: GetBlocksQuery;
 	initialTransfers: GetTransfersQuery;
@@ -78,5 +59,22 @@ const Home: NextPage<HomeProps> = ({ initialBlocks, initialTransfers }) => {
 		</div>
 	);
 };
+
+Home.getInitialProps = wrapper.getInitialPageProps((store) => async () => {
+	const { data: blocksData } = await store.dispatch(
+		api.endpoints.GetBlocks.initiate()
+	);
+	const { data: transfersData } = await store.dispatch(
+		api.endpoints.GetTransfers.initiate()
+	);
+	await Promise.all(api.util.getRunningOperationPromises());
+
+	return {
+		props: {
+			initialBlocks: blocksData,
+			transfers: transfersData,
+		},
+	};
+});
 
 export default connect((state: State) => state)(Home);
