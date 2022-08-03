@@ -3,8 +3,8 @@ import { useMemo } from "react";
 export const usePolling = <T>(
 	initialData: T,
 	queryFunction: Function,
-	pollingInterval: number = 5000,
-	queryParams?: Record<string, unknown>
+	queryParams?: Record<string, unknown>,
+	pollingInterval: number = 5000
 ) => {
 	const { data, isFetching } = queryFunction(queryParams, {
 		pollingInterval,
