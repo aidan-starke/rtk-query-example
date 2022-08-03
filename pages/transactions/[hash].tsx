@@ -66,7 +66,7 @@ const Block: NextPage<BlockProps> = ({ block, extrinsics }) => {
 					</span>
 				</p>
 			</div>
-			<div className="border-2 rounded h-full overflow-y-auto p-2">
+			<div className="border-2 rounded h-full p-2 overflow-y-auto">
 				<TableRow rowClassName="text-lg">
 					<p>Tx Hash</p>
 					<p>Method</p>
@@ -74,7 +74,7 @@ const Block: NextPage<BlockProps> = ({ block, extrinsics }) => {
 					<p>Age</p>
 				</TableRow>
 				{extrinsics.map((ext) => (
-					<TableRow key={ext?.id}>
+					<TableRow key={ext?.id} rowClassName="space-y-px">
 						<p className="truncate text-sm font-mono text-gray-500">
 							{ext?.id}
 						</p>
@@ -101,7 +101,7 @@ const TableRow: FC<TableRowProps> = ({ children, rowClassName }) => (
 	<div
 		className={clsx(
 			rowClassName,
-			"grid grid-cols-4 gap-4 space-y-2 border-b items-center p-4 space-x-4"
+			"grid grid-cols-4 gap-4 border-b items-center p-4 space-x-4"
 		)}
 	>
 		{children}
