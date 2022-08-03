@@ -1,7 +1,6 @@
 import { GetExtrinsicByIdQuery } from "@/libs/api/generated";
 import { getDistance } from "@/utils";
 import { FC, useEffect, useState } from "react";
-import { Layout } from "@/libs/components";
 
 interface ExtrinsicProps {
 	extrinsic: GetExtrinsicByIdQuery["extrinsic"];
@@ -11,7 +10,7 @@ export const Extrinsic: FC<ExtrinsicProps> = ({ extrinsic }) => {
 	const distance = useDistance(extrinsic?.timestamp as string);
 
 	return (
-		<Layout.TableRow rowClassName="space-y-px">
+		<>
 			<p className="truncate text-sm font-mono text-gray-500">
 				{extrinsic?.id}
 			</p>
@@ -22,7 +21,7 @@ export const Extrinsic: FC<ExtrinsicProps> = ({ extrinsic }) => {
 				{extrinsic?.signerId}
 			</p>
 			<p>{distance}</p>
-		</Layout.TableRow>
+		</>
 	);
 };
 
