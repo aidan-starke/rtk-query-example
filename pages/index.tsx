@@ -26,6 +26,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
 				initialBlocks: blocksData,
 				transfers: transfersData,
 			},
+			revalidate: 300,
 		};
 	}
 );
