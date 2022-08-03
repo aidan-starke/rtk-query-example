@@ -1,51 +1,48 @@
 import type { NextPage } from "next";
 import {
-	useGetBlockByIdQuery,
-	useGetBlocksQuery,
+	GetBlocksQuery,
+	GetTransfersQuery,
 	useGetTransfersQuery,
 } from "@/libs/api/generated";
 import { useEffect, useMemo, useState } from "react";
 import { Block, Transfer } from "@/libs/components";
+import { wrapper, State } from "@/libs/store";
+import { connect } from "react-redux";
+import { api } from "@/libs/api/generated";
 
-const Home: NextPage = () => {
-	const { data: blockData, isFetching: blocksFetching } = useGetBlocksQuery(
-		undefined,
-		{
-			pollingInterval: 5000,
-		}
-	);
-	const blocksFetched = useIsFetched(blocksFetching);
+export const getServerSideProps = wrapper.getServerSideProps(
+	(store) => async () => {
+		const { data: blocksData } = await store.dispatch(
+			api.endpoints.GetBlocks.initiate()
+		);
+		const { data: transfersData } = await store.dispatch(
+			api.endpoints.GetTransfers.initiate()
+		);
 
-	const { data: transferData, isFetching: transfersFetching } =
-		useGetTransfersQuery(undefined, {
-			pollingInterval: 5000,
-		});
-	const transfersFetched = useIsFetched(transfersFetching);
+		await Promise.all(api.util.getRunningOperationPromises());
 
-	const blocks = useMemo(() => blockData?.blocks?.nodes, [blockData]);
+		return {
+			props: {
+				blocks: blocksData?.blocks,
+				transfers: transfersData?.transfers,
+			},
+		};
+	}
+);
 
-	const { data } = useGetBlockByIdQuery({
-		id: "0xb405fa0c81a7b5810e27f9d503849a4fd827cc21c678d41d759eb2e3ec57b992",
-	});
+interface HomeProps {
+	blocks: GetBlocksQuery["blocks"];
+	transfers: GetTransfersQuery["transfers"];
+}
 
-	useEffect(() => {
-		if (!data) return;
-
-		console.log({ data });
-	}, [data]);
-
-	const transfers = useMemo(
-		() => transferData?.transfers?.nodes,
-		[transferData]
-	);
-
+const Home: NextPage<HomeProps> = ({ blocks, transfers }) => {
 	return (
 		<div className="h-screen p-8 m-auto grid grid-cols-2 gap-4">
 			<div className="border-2 rounded h-full overflow-y-auto p-2">
 				<h1 className="text-xl font-mono p-4">Latest Blocks</h1>
-				{blocksFetched && blocks ? (
+				{blocks?.nodes ? (
 					<>
-						{blocks.map((block) => (
+						{blocks.nodes.map((block) => (
 							<Block
 								key={block?.id}
 								hash={block?.id}
@@ -64,9 +61,9 @@ const Home: NextPage = () => {
 			</div>
 			<div className="border-2 rounded h-full overflow-y-auto p-2">
 				<h1 className="text-xl font-mono p-4">Latest Transactions</h1>
-				{transfersFetched && transfers ? (
+				{transfers?.nodes ? (
 					<>
-						{transfers.map((transfer) => (
+						{transfers.nodes.map((transfer) => (
 							<Transfer
 								key={transfer?.id}
 								timestamp={transfer?.timestamp}
@@ -85,7 +82,7 @@ const Home: NextPage = () => {
 	);
 };
 
-export default Home;
+export default connect((state: State) => state)(Home);
 
 const useIsFetched = (isFetching: boolean) => {
 	const [isFetched, setIsFetched] = useState<boolean>(false);
