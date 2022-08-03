@@ -12757,6 +12757,24 @@ export type GetBlocksQuery = {
 	} | null;
 };
 
+export type GetExtrinsicByIdQueryVariables = Exact<{
+	id: Scalars["String"];
+}>;
+
+export type GetExtrinsicByIdQuery = {
+	__typename?: "Query";
+	extrinsic?: {
+		__typename?: "Extrinsic";
+		id: string;
+		section?: string | null;
+		method?: string | null;
+		args?: any | null;
+		signerId?: string | null;
+		timestamp?: any | null;
+		tip?: string | null;
+	} | null;
+};
+
 export type GetTransfersQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetTransfersQuery = {
@@ -12809,6 +12827,19 @@ export const GetBlocksDocument = `
   }
 }
     `;
+export const GetExtrinsicByIdDocument = `
+    query GetExtrinsicById($id: String!) {
+  extrinsic(id: $id) {
+    id
+    section
+    method
+    args
+    signerId
+    timestamp
+    tip
+  }
+}
+    `;
 export const GetTransfersDocument = `
     query GetTransfers {
   transfers(orderBy: TIMESTAMP_DESC) {
@@ -12832,6 +12863,12 @@ const injectedRtkApi = api.injectEndpoints({
 		GetBlocks: build.query<GetBlocksQuery, GetBlocksQueryVariables | void>({
 			query: (variables) => ({ document: GetBlocksDocument, variables }),
 		}),
+		GetExtrinsicById: build.query<
+			GetExtrinsicByIdQuery,
+			GetExtrinsicByIdQueryVariables
+		>({
+			query: (variables) => ({ document: GetExtrinsicByIdDocument, variables }),
+		}),
 		GetTransfers: build.query<
 			GetTransfersQuery,
 			GetTransfersQueryVariables | void
@@ -12847,6 +12884,8 @@ export const {
 	useLazyGetBlockByIdQuery,
 	useGetBlocksQuery,
 	useLazyGetBlocksQuery,
+	useGetExtrinsicByIdQuery,
+	useLazyGetExtrinsicByIdQuery,
 	useGetTransfersQuery,
 	useLazyGetTransfersQuery,
 } = injectedRtkApi;

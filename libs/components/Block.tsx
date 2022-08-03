@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react";
+import { FC } from "react";
 import moment from "moment";
 
 interface BlockProps {
@@ -16,11 +16,6 @@ export const Block: FC<BlockProps> = ({
 	parentHash,
 	extrinsics,
 }) => {
-	const blockAge = useMemo<string | undefined>(
-		() => moment(timestamp).fromNow(),
-		[timestamp]
-	);
-
 	return (
 		<div className="p-4 grid grid-cols-3 items-center border-b">
 			<div className="flex space-x-2">
@@ -31,7 +26,7 @@ export const Block: FC<BlockProps> = ({
 					<a className="text-blue-600" href={`/transactions/${hash}`}>
 						{height}
 					</a>
-					<p className="text-sm">{blockAge}</p>
+					<p className="text-sm">{moment(timestamp).fromNow()}</p>
 				</div>
 			</div>
 
@@ -46,11 +41,11 @@ export const Block: FC<BlockProps> = ({
 
 			<div className="text-sm space-y-px">
 				<p className="flex">
-					Hash:&nbsp;
+					Hash&nbsp;
 					<span className="font-mono text-gray-500 truncate">{hash}</span>
 				</p>
 				<p className="flex">
-					Parent:&nbsp;
+					Parent&nbsp;
 					<span className="font-mono text-gray-500 truncate">{parentHash}</span>
 				</p>
 			</div>

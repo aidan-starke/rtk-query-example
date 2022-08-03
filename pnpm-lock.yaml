@@ -11,6 +11,7 @@ specifiers:
   '@types/react': 18.0.15
   '@types/react-dom': 18.0.6
   autoprefixer: ^10.4.8
+  clsx: ^1.2.1
   eslint: 8.21.0
   eslint-config-next: 12.2.3
   ethers: ^5.6.9
@@ -33,6 +34,7 @@ specifiers:
 dependencies:
   '@reduxjs/toolkit': 1.8.3_kkwg4cbsojnjnupd3btipussee
   '@rtk-query/graphql-request-base-query': 2.2.0_7eqfsrtajm3m6fbi7ajokg3vky
+  clsx: 1.2.1
   ethers: 5.6.9
   graphql: 16.5.0
   graphql-request: 4.3.0_graphql@16.5.0
@@ -2378,6 +2380,11 @@ packages:
     resolution: {integrity: sha512-JQHZ2QMW6l3aH/j6xCqQThY/9OH4D/9ls34cgkUBiEeocRTU04tHfKPBsUK1PqZCUQM7GiA0IIXJSuXHI64Kbg==}
     engines: {node: '>=0.8'}
     dev: true
+
+  /clsx/1.2.1:
+    resolution: {integrity: sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==}
+    engines: {node: '>=6'}
+    dev: false
 
   /color-convert/1.9.3:
     resolution: {integrity: sha512-QfAUtd+vFdAtFQcC8CCyYt1fYWxSqAiK2cSD6zDB8N3cpsEBAvRxp9zOGg6G/SHHJYAT88/az/IuDGALsNVbGg==}

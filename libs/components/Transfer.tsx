@@ -49,7 +49,7 @@ export const Transfer: FC<TransferProps> = ({
 					<span className="font-mono text-gray-500 text-xs">{from}</span>
 				</p>
 				<p>
-					To:&nbsp;
+					To&nbsp;
 					<span className="font-mono text-gray-500 text-xs">{to}</span>
 				</p>
 			</div>

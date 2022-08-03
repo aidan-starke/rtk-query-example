@@ -1,9 +1,11 @@
 import type { NextPage } from "next";
-import { GetBlockByIdQuery } from "@/libs/api/generated";
+import { GetBlockByIdQuery, GetExtrinsicByIdQuery } from "@/libs/api/generated";
 import { State, store, wrapper } from "@/libs/store";
 import { api } from "@/libs/api/generated";
 import { connect } from "react-redux";
-import JSONPretty from "react-json-pretty";
+import moment from "moment";
+import { FC, ReactNode } from "react";
+import clsx from "clsx";
 
 export const getStaticPaths = async () => {
 	const { data } = await store.dispatch(api.endpoints.GetBlocks.initiate());
@@ -19,22 +21,40 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps = wrapper.getStaticProps(
 	(store) => async (context) => {
-		const { data } = await store.dispatch(
+		const { data: blockData } = await store.dispatch(
 			api.endpoints.GetBlockById.initiate({
 				id: context?.params?.hash as string,
 			})
 		);
+
+		const extrinsics = await Promise.all(
+			(blockData?.block?.extrinsics?.edges as any)?.map(
+				async ({ node }: { node: { id: string } }) =>
+					await store.dispatch(
+						api.endpoints.GetExtrinsicById.initiate({
+							id: node?.id,
+						})
+					)
+			)
+		);
+
 		await Promise.all(api.util.getRunningOperationPromises());
 
 		return {
 			props: {
-				block: data?.block,
+				block: blockData?.block,
+				extrinsics: extrinsics.map((extrinsic) => extrinsic?.data?.extrinsic),
 			},
 		};
 	}
 );
 
-const Block: NextPage<{ block: GetBlockByIdQuery["block"] }> = ({ block }) => {
+interface BlockProps {
+	block: GetBlockByIdQuery["block"];
+	extrinsics: GetExtrinsicByIdQuery["extrinsic"][];
+}
+
+const Block: NextPage<BlockProps> = ({ block, extrinsics }) => {
 	return (
 		<div className="h-screen p-8 m-auto space-y-4">
 			<div>
@@ -47,10 +67,43 @@ const Block: NextPage<{ block: GetBlockByIdQuery["block"] }> = ({ block }) => {
 				</p>
 			</div>
 			<div className="border-2 rounded h-full overflow-y-auto p-2">
-				<JSONPretty data={block} className="p-4" />
+				<TableRow rowClassName="text-lg">
+					<p>Tx Hash</p>
+					<p>Method</p>
+					<p>Signer</p>
+					<p>Age</p>
+				</TableRow>
+				{extrinsics.map((ext) => (
+					<TableRow key={ext?.id}>
+						<p className="truncate text-sm font-mono text-gray-500">
+							{ext?.id}
+						</p>
+						<p>
+							{ext?.section}.{ext?.method}
+						</p>
+						<p className="text-sm font-mono text-gray-500">{ext?.signerId}</p>
+						<p>{moment(ext?.timestamp).fromNow()}</p>
+					</TableRow>
+				))}
 			</div>
 		</div>
 	);
 };
 
 export default connect((state: State) => state)(Block);
+
+interface TableRowProps {
+	children: ReactNode;
+	rowClassName?: string;
+}
+
+const TableRow: FC<TableRowProps> = ({ children, rowClassName }) => (
+	<div
+		className={clsx(
+			rowClassName,
+			"grid grid-cols-4 gap-4 space-y-2 border-b items-center p-4 space-x-4"
+		)}
+	>
+		{children}
+	</div>
+);
