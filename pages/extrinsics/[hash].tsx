@@ -58,7 +58,7 @@ const Block: NextPage<BlockProps> = ({ block, extrinsics }) => {
 	return (
 		<div className="h-screen p-8 m-auto space-y-4">
 			<div>
-				<h1 className="text-xl">Transactions</h1>
+				<h1 className="text-xl">Extrinsics</h1>
 				<p>
 					For block{" "}
 					<span className="font-mono text-sm text-gray-500">

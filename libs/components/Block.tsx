@@ -23,7 +23,7 @@ export const Block: FC<BlockProps> = ({
 					<p className="text-center w-full">Bk</p>
 				</div>
 				<div>
-					<a className="text-blue-600" href={`/transactions/${hash}`}>
+					<a className="text-blue-600" href={`/extrinsics/${hash}`}>
 						{height}
 					</a>
 					<p className="text-sm">{getDistance(timestamp as string)}</p>
@@ -35,7 +35,7 @@ export const Block: FC<BlockProps> = ({
 					<span className="font-mono text-gray-500">
 						{extrinsics?.length ?? 0}
 					</span>{" "}
-					{extrinsics?.length === 1 ? "transaction" : "transactions"}
+					{extrinsics?.length === 1 ? "extrinsic" : "extrinsics"}
 				</p>
 			</div>
 
