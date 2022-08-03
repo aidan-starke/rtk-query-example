@@ -3,16 +3,12 @@ import { configureStore } from "@reduxjs/toolkit";
 import { api } from "@/libs/api/generated";
 import { createWrapper, HYDRATE } from "next-redux-wrapper";
 
-export interface State {
-	tick: string;
-}
+export interface State {}
 
-const nextReducer = (state: State = { tick: "init" }, action: AnyAction) => {
+const ssrReducer = (state: State = {}, action: AnyAction) => {
 	switch (action.type) {
 		case HYDRATE:
 			return { ...state, ...action.payload };
-		case "TICK":
-			return { ...state, tick: action.payload };
 		default:
 			return state;
 	}
@@ -20,7 +16,7 @@ const nextReducer = (state: State = { tick: "init" }, action: AnyAction) => {
 
 const rootReducer = combineReducers({
 	[api.reducerPath]: api.reducer,
-	nextReducer,
+	ssrReducer,
 });
 
 const makeStore = () =>
