@@ -44,7 +44,7 @@ const Home: NextPage<HomeProps> = ({ initialBlocks, initialTransfers }) => {
 				))}
 			</div>
 			<div className="border-2 rounded h-full overflow-y-auto p-2">
-				<h1 className="text-xl font-mono p-4">Latest Transactions</h1>
+				<h1 className="text-xl font-mono p-4">Latest Transfers</h1>
 				{transfers?.nodes?.map((transfer) => (
 					<Transfer
 						key={transfer?.id}
