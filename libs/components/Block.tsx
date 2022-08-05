@@ -25,7 +25,7 @@ export const Block: FC<BlockProps> = ({
 					<p className="text-center w-full">Bk</p>
 				</div>
 				<div>
-					<a className="text-blue-600 text-sm" href={`/block/${number}`}>
+					<a className="text-blue-600 text-sm font-mono" href={`/block/${number}`}>
 						{height}
 					</a>
 					<p className="text-sm">{getDistance(timestamp as string)}</p>
