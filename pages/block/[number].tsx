@@ -1,21 +1,23 @@
 import type { NextPage } from "next";
-import { GetBlockByIdQuery, GetExtrinsicByIdQuery } from "@/libs/api/generated";
-import { State, wrapper } from "@/libs/store";
-import { api } from "@/libs/api/generated";
-import { connect } from "react-redux";
 import { Extrinsic } from "@/libs/components";
-import { FC, ReactNode } from "react";
-import clsx from "clsx";
+import { Layout } from "@/libs/components";
+import Decimal from "decimal.js";
+import { AcalaBlock } from "@/libs/types";
+import { State, wrapper } from "@/libs/store";
+import { api, GetExtrinsicByIdQuery } from "@/libs/api/generated";
+import { connect } from "react-redux";
 
 export const getServerSideProps = wrapper.getServerSideProps(
 	(store) => async (context) => {
-		const { data: blockData } = await store.dispatch(
-			api.endpoints.GetBlockById.initiate({
-				id: context?.params?.hash as string,
+		const { data } = await store.dispatch(
+			api.endpoints.GetBlockByNumber.initiate({
+				number: new Decimal(context?.params?.number as string).toJSON(),
 			})
 		);
+		const block = data?.blocks?.nodes[0];
+
 		const extrinsics = await Promise.all(
-			(blockData?.block?.extrinsics?.edges as any)?.map(
+			(block?.extrinsics?.edges as any)?.map(
 				async ({ node }: { node: { id: string } }) =>
 					await store.dispatch(
 						api.endpoints.GetExtrinsicById.initiate({
@@ -28,7 +30,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
 
 		return {
 			props: {
-				block: blockData?.block,
+				block,
 				extrinsics: extrinsics.map((extrinsic) => extrinsic?.data?.extrinsic),
 			},
 		};
@@ -36,13 +38,13 @@ export const getServerSideProps = wrapper.getServerSideProps(
 );
 
 interface BlockProps {
-	block: GetBlockByIdQuery["block"];
+	block: AcalaBlock;
 	extrinsics: Array<GetExtrinsicByIdQuery["extrinsic"]>;
 }
 
 const Block: NextPage<BlockProps> = ({ block, extrinsics }) => {
 	return (
-		<div className="h-screen p-8 m-auto space-y-4">
+		<div className="h-screen p-8 m-auto space-y-4 max-h-[89vh]">
 			<div>
 				<h1 className="text-xl">Extrinsics</h1>
 				<p>
@@ -53,16 +55,19 @@ const Block: NextPage<BlockProps> = ({ block, extrinsics }) => {
 				</p>
 			</div>
 			<div className="border-2 rounded h-full p-2 overflow-y-auto">
-				<TableRow rowClassName="text-lg">
+				<Layout.TableRow rowClassName="text-lg grid-cols-4">
 					<p>Tx Hash</p>
 					<p>Method</p>
 					<p>Signer</p>
 					<p>Age</p>
-				</TableRow>
+				</Layout.TableRow>
 				{extrinsics?.map((extrinsic) => (
-					<TableRow rowClassName="space-y-px" key={extrinsic?.id}>
+					<Layout.TableRow
+						rowClassName="space-y-px grid-cols-4"
+						key={extrinsic?.id}
+					>
 						<Extrinsic extrinsic={extrinsic} />
-					</TableRow>
+					</Layout.TableRow>
 				))}
 			</div>
 		</div>
@@ -70,19 +75,3 @@ const Block: NextPage<BlockProps> = ({ block, extrinsics }) => {
 };
 
 export default connect((state: State) => state)(Block);
-
-interface TableRowProps {
-	children: ReactNode;
-	rowClassName?: string;
-}
-
-const TableRow: FC<TableRowProps> = ({ children, rowClassName }) => (
-	<div
-		className={clsx(
-			rowClassName,
-			"grid grid-cols-4 gap-4 border-b items-center p-4 space-x-4"
-		)}
-	>
-		{children}
-	</div>
-);

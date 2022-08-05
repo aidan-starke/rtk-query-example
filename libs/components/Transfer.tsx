@@ -1,14 +1,14 @@
 import { FC, useMemo } from "react";
 
 import { utils as ethers } from "ethers";
-import { getDistance } from "@/utils";
+import { getDistance } from "@/libs/utils";
 
 interface TransferProps {
-	timestamp: string | undefined;
-	from: string | null | undefined;
-	to: string | null | undefined;
-	amount: string | null | undefined;
-	token: string | null | undefined;
+	timestamp?: string;
+	from?: string | null;
+	to?: string | null;
+	amount?: string | null;
+	token?: string | null;
 }
 
 export const Transfer: FC<TransferProps> = ({
@@ -30,7 +30,7 @@ export const Transfer: FC<TransferProps> = ({
 	return (
 		<div className="p-4 grid grid-cols-3 items-center border-b">
 			<div className="flex space-x-2">
-				<div className="bg-gray-200 h-12 w-12 flex items-center rounded-3xl">
+				<div className="prose bg-gray-200 h-12 w-12 flex items-center rounded-3xl">
 					<p className="text-center w-full">Tx</p>
 				</div>
 				<div className="flex items-center">
@@ -41,11 +41,21 @@ export const Transfer: FC<TransferProps> = ({
 			<div className="text-sm space-y-px">
 				<p className="truncate">
 					From&nbsp;
-					<span className="font-mono text-gray-500 text-xs">{from}</span>
+					<a
+						href={`/address/${from}`}
+						className="text-blue-600 font-mono text-xs"
+					>
+						{from}
+					</a>
 				</p>
 				<p className="truncate">
 					To&nbsp;
-					<span className="font-mono text-gray-500 text-xs">{to}</span>
+					<a
+						href={`/address/${to}`}
+						className="text-blue-600 font-mono text-xs"
+					>
+						{to}
+					</a>
 				</p>
 			</div>
 

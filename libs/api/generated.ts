@@ -12714,6 +12714,42 @@ export type _Metadata = {
 	targetHeight?: Maybe<Scalars["Int"]>;
 };
 
+export type GetAccountByIdQueryVariables = Exact<{
+	id: Scalars["String"];
+}>;
+
+export type GetAccountByIdQuery = {
+	__typename?: "Query";
+	account?: {
+		__typename?: "Account";
+		id: string;
+		transferOut: {
+			__typename?: "TransfersConnection";
+			nodes: Array<{
+				__typename?: "Transfer";
+				id: string;
+				fromId?: string | null;
+				toId?: string | null;
+				tokenId?: string | null;
+				amount?: string | null;
+				timestamp?: any | null;
+			} | null>;
+		};
+		transferIn: {
+			__typename?: "TransfersConnection";
+			nodes: Array<{
+				__typename?: "Transfer";
+				id: string;
+				fromId?: string | null;
+				toId?: string | null;
+				tokenId?: string | null;
+				amount?: string | null;
+				timestamp?: any | null;
+			} | null>;
+		};
+	} | null;
+};
+
 export type GetBlockByIdQueryVariables = Exact<{
 	id: Scalars["String"];
 }>;
@@ -12731,6 +12767,29 @@ export type GetBlockByIdQuery = {
 				node?: { __typename?: "Extrinsic"; id: string } | null;
 			}>;
 		};
+	} | null;
+};
+
+export type GetBlockByNumberQueryVariables = Exact<{
+	number?: InputMaybe<Scalars["BigFloat"]>;
+}>;
+
+export type GetBlockByNumberQuery = {
+	__typename?: "Query";
+	blocks?: {
+		__typename?: "BlocksConnection";
+		nodes: Array<{
+			__typename?: "Block";
+			id: string;
+			number?: any | null;
+			extrinsics: {
+				__typename?: "ExtrinsicsConnection";
+				edges: Array<{
+					__typename?: "ExtrinsicsEdge";
+					node?: { __typename?: "Extrinsic"; id: string } | null;
+				}>;
+			};
+		} | null>;
 	} | null;
 };
 
@@ -12793,6 +12852,33 @@ export type GetTransfersQuery = {
 	} | null;
 };
 
+export const GetAccountByIdDocument = `
+    query GetAccountById($id: String!) {
+  account(id: $id) {
+    id
+    transferOut(orderBy: TIMESTAMP_DESC) {
+      nodes {
+        id
+        fromId
+        toId
+        tokenId
+        amount
+        timestamp
+      }
+    }
+    transferIn(orderBy: TIMESTAMP_DESC) {
+      nodes {
+        id
+        fromId
+        toId
+        tokenId
+        amount
+        timestamp
+      }
+    }
+  }
+}
+    `;
 export const GetBlockByIdDocument = `
     query GetBlockById($id: String!) {
   block(id: $id) {
@@ -12802,6 +12888,23 @@ export const GetBlockByIdDocument = `
       edges {
         node {
           id
+        }
+      }
+    }
+  }
+}
+    `;
+export const GetBlockByNumberDocument = `
+    query GetBlockByNumber($number: BigFloat) {
+  blocks(filter: {number: {equalTo: $number}}) {
+    nodes {
+      id
+      number
+      extrinsics(orderBy: TIMESTAMP_DESC) {
+        edges {
+          node {
+            id
+          }
         }
       }
     }
@@ -12857,8 +12960,20 @@ export const GetTransfersDocument = `
 
 const injectedRtkApi = api.injectEndpoints({
 	endpoints: (build) => ({
+		GetAccountById: build.query<
+			GetAccountByIdQuery,
+			GetAccountByIdQueryVariables
+		>({
+			query: (variables) => ({ document: GetAccountByIdDocument, variables }),
+		}),
 		GetBlockById: build.query<GetBlockByIdQuery, GetBlockByIdQueryVariables>({
 			query: (variables) => ({ document: GetBlockByIdDocument, variables }),
+		}),
+		GetBlockByNumber: build.query<
+			GetBlockByNumberQuery,
+			GetBlockByNumberQueryVariables | void
+		>({
+			query: (variables) => ({ document: GetBlockByNumberDocument, variables }),
 		}),
 		GetBlocks: build.query<GetBlocksQuery, GetBlocksQueryVariables | void>({
 			query: (variables) => ({ document: GetBlocksDocument, variables }),
@@ -12880,8 +12995,12 @@ const injectedRtkApi = api.injectEndpoints({
 
 export { injectedRtkApi as api };
 export const {
+	useGetAccountByIdQuery,
+	useLazyGetAccountByIdQuery,
 	useGetBlockByIdQuery,
 	useLazyGetBlockByIdQuery,
+	useGetBlockByNumberQuery,
+	useLazyGetBlockByNumberQuery,
 	useGetBlocksQuery,
 	useLazyGetBlocksQuery,
 	useGetExtrinsicByIdQuery,

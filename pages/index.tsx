@@ -11,6 +11,25 @@ import { connect } from "react-redux";
 import { api } from "@/libs/api/generated";
 import { usePolling } from "@/libs/hooks";
 
+export const getServerSideProps = wrapper.getServerSideProps(
+	(store) => async () => {
+		const { data: blocksData } = await store.dispatch(
+			api.endpoints.GetBlocks.initiate()
+		);
+		const { data: transfersData } = await store.dispatch(
+			api.endpoints.GetTransfers.initiate()
+		);
+		await Promise.all(api.util.getRunningOperationPromises());
+
+		return {
+			props: {
+				initialBlocks: blocksData,
+				transfers: transfersData,
+			},
+		};
+	}
+);
+
 interface HomeProps {
 	initialBlocks: GetBlocksQuery;
 	initialTransfers: GetTransfersQuery;
@@ -27,8 +46,11 @@ const Home: NextPage<HomeProps> = ({ initialBlocks, initialTransfers }) => {
 	);
 
 	return (
-		<div className="h-screen p-8 m-auto grid grid-cols-2 gap-4">
-			<div className="border-2 rounded h-full overflow-y-auto p-2">
+		<div className="h-screen p-8 m-auto grid grid-cols-2 gap-4 max-h-[95vh]">
+			<div
+				className="border-2 rounded h-full overflow-y-auto p-2"
+				suppressHydrationWarning
+			>
 				<h1 className="text-xl font-mono p-4">Latest Blocks</h1>
 				{blocks?.nodes?.map((block) => (
 					<Block
@@ -37,13 +59,17 @@ const Home: NextPage<HomeProps> = ({ initialBlocks, initialTransfers }) => {
 						height={block?.number}
 						timestamp={block?.timestamp}
 						parentHash={block?.parentHash}
+						number={block?.number}
 						extrinsics={block?.extrinsics?.edges
 							?.map(({ node }) => node?.id)
 							.filter((e) => e?.length)}
 					/>
 				))}
 			</div>
-			<div className="border-2 rounded h-full overflow-y-auto p-2">
+			<div
+				className="border-2 rounded h-full overflow-y-auto p-2"
+				suppressHydrationWarning
+			>
 				<h1 className="text-xl font-mono p-4">Latest Transfers</h1>
 				{transfers?.nodes?.map((transfer) => (
 					<Transfer
@@ -59,22 +85,5 @@ const Home: NextPage<HomeProps> = ({ initialBlocks, initialTransfers }) => {
 		</div>
 	);
 };
-
-Home.getInitialProps = wrapper.getInitialPageProps((store) => async () => {
-	const { data: blocksData } = await store.dispatch(
-		api.endpoints.GetBlocks.initiate()
-	);
-	const { data: transfersData } = await store.dispatch(
-		api.endpoints.GetTransfers.initiate()
-	);
-	await Promise.all(api.util.getRunningOperationPromises());
-
-	return {
-		props: {
-			initialBlocks: blocksData,
-			transfers: transfersData,
-		},
-	};
-});
 
 export default connect((state: State) => state)(Home);

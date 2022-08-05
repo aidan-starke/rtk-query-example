@@ -1,5 +1,5 @@
 import { GetExtrinsicByIdQuery } from "@/libs/api/generated";
-import { getDistance } from "@/utils";
+import { getDistance } from "@/libs/utils";
 import { FC, useState } from "react";
 import JSONPretty from "react-json-pretty";
 import clsx from "clsx";
@@ -13,11 +13,9 @@ export const Extrinsic: FC<ExtrinsicProps> = ({ extrinsic }) => {
 
 	return (
 		<>
-			<p className="truncate text-sm font-mono text-gray-600">
-				{extrinsic?.id}
-			</p>
+			<p className="truncate text-sm font-mono prose">{extrinsic?.id}</p>
 			<div className="flex items-center">
-				<p className="flex-1">
+				<p className="prose flex-1 font-mono text-sm">
 					{extrinsic?.section}.{extrinsic?.method}
 				</p>
 				<button
@@ -30,9 +28,12 @@ export const Extrinsic: FC<ExtrinsicProps> = ({ extrinsic }) => {
 					{viewArgs ? "Hide" : "View"} Args
 				</button>
 			</div>
-			<p className="text-sm font-mono text-gray-600 truncate">
+			<a
+				href={`/address/${extrinsic?.signerId}`}
+				className="text-sm font-mono prose truncate text-blue-600"
+			>
 				{extrinsic?.signerId}
-			</p>
+			</a>
 			<p>{getDistance(extrinsic?.timestamp as string)}</p>
 			{viewArgs && (
 				<div className="border p-2 max-w-fit min-w-fit shadow rounded">
