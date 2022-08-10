@@ -79,7 +79,7 @@ export const Transfer: FC<TransferProps> = ({
 					<span
 						className={clsx(
 							"font-mono text-gray-500",
-							isDarkMode && "text-gray-300"
+							isDarkMode && "!text-gray-300"
 						)}
 					>
 						{value}
