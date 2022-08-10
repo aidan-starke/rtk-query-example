@@ -6,7 +6,6 @@ class MyDocument extends Document {
 			<Html>
 				<Head>
 					<title>Acala Explorer</title>
-					<meta name="description" content="Acala Explorer" />
 					<link rel="icon" href="/favicon.svg" />
 				</Head>
 				<body>

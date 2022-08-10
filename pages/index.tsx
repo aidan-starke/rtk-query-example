@@ -6,10 +6,12 @@ import {
 	useGetTransfersQuery,
 } from "@/libs/api/generated";
 import { Block, Transfer } from "@/libs/components";
-import { wrapper, State } from "@/libs/store";
-import { connect } from "react-redux";
+import { wrapper, State, AppState } from "@/libs/store";
+import { connect, useSelector } from "react-redux";
 import { api } from "@/libs/api/generated";
 import { usePolling } from "@/libs/hooks";
+import clsx from "clsx";
+import { useEffect } from "react";
 
 export const getServerSideProps = wrapper.getServerSideProps(
 	(store) => async () => {
@@ -45,8 +47,15 @@ const Home: NextPage<HomeProps> = ({ initialBlocks, initialTransfers }) => {
 		useGetTransfersQuery
 	);
 
+	const isDarkMode = useSelector((state: AppState) => state.theme === "Dark");
+
 	return (
-		<div className="h-screen p-8 m-auto grid grid-cols-2 gap-4 max-h-[95vh]">
+		<div
+			className={clsx(
+				"h-screen p-8 m-auto grid grid-cols-2 gap-4 max-h-[95vh]",
+				isDarkMode && "bg-gray-600"
+			)}
+		>
 			<div
 				className="border-2 rounded h-full overflow-y-auto p-2"
 				suppressHydrationWarning

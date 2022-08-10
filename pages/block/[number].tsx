@@ -3,9 +3,10 @@ import { Extrinsic } from "@/libs/components";
 import { Layout } from "@/libs/components";
 import Decimal from "decimal.js";
 import { AcalaBlock } from "@/libs/types";
-import { State, wrapper } from "@/libs/store";
+import { AppState, State, wrapper } from "@/libs/store";
 import { api, GetExtrinsicByIdQuery } from "@/libs/api/generated";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
+import clsx from "clsx";
 
 export const getServerSideProps = wrapper.getServerSideProps(
 	(store) => async (context) => {
@@ -43,13 +44,20 @@ interface BlockProps {
 }
 
 const Block: NextPage<BlockProps> = ({ block, extrinsics }) => {
+	const isDarkMode = useSelector((state: AppState) => state.theme === "Dark");
+
 	return (
 		<div className="h-screen p-8 m-auto space-y-4 max-h-[89vh]">
 			<div>
 				<h1 className="text-xl">Extrinsics</h1>
 				<p>
 					For block{" "}
-					<span className="font-mono text-sm text-gray-500">
+					<span
+						className={clsx(
+							"font-mono text-sm text-gray-500",
+							isDarkMode && "text-gray-300"
+						)}
+					>
 						{block?.number}
 					</span>
 				</p>

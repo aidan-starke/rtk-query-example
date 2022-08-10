@@ -1,13 +1,14 @@
 import type { NextPage } from "next";
 import { usePolling } from "@/libs/hooks";
 import { Transfer } from "@/libs/components";
-import { State, wrapper } from "@/libs/store";
+import { AppState, State, wrapper } from "@/libs/store";
 import {
 	api,
 	GetAccountByIdQuery,
 	useGetAccountByIdQuery,
 } from "@/libs/api/generated";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
+import clsx from "clsx";
 
 export const getServerSideProps = wrapper.getServerSideProps(
 	(store) => async (context) => {
@@ -38,12 +39,21 @@ const Address: NextPage<AddressProps> = ({ address, accountData }) => {
 	const {
 		transfers: [transfersOut, transfersIn],
 	} = useAccount(address, accountData);
+	const isDarkMode = useSelector((state: AppState) => state.theme === "Dark");
 
 	return (
 		<div className="h-screen p-8 m-auto space-y-4 max-h-[95vh]">
 			<div>
 				<h1 className="text-xl">
-					Address <span className="prose font-mono text-sm">{address}</span>
+					Address{" "}
+					<span
+						className={clsx(
+							"prose font-mono text-sm",
+							isDarkMode && "text-gray-300"
+						)}
+					>
+						{address}
+					</span>
 				</h1>
 			</div>
 			<div className="grid grid-cols-2 gap-4">
