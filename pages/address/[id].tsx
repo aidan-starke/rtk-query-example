@@ -16,7 +16,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
 		const accountData = await store.dispatch(
 			api.endpoints.GetAccountById.initiate({
 				id: address,
-			})
+			}) as any
 		);
 
 		await Promise.all(api.util.getRunningOperationPromises());

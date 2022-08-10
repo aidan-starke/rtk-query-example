@@ -11,15 +11,14 @@ import { connect, useSelector } from "react-redux";
 import { api } from "@/libs/api/generated";
 import { usePolling } from "@/libs/hooks";
 import clsx from "clsx";
-import { useEffect } from "react";
 
 export const getServerSideProps = wrapper.getServerSideProps(
 	(store) => async () => {
 		const { data: blocksData } = await store.dispatch(
-			api.endpoints.GetBlocks.initiate()
+			api.endpoints.GetBlocks.initiate() as any
 		);
 		const { data: transfersData } = await store.dispatch(
-			api.endpoints.GetTransfers.initiate()
+			api.endpoints.GetTransfers.initiate() as any
 		);
 		await Promise.all(api.util.getRunningOperationPromises());
 

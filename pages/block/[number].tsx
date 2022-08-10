@@ -13,7 +13,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
 		const { data } = await store.dispatch(
 			api.endpoints.GetBlockByNumber.initiate({
 				number: new Decimal(context?.params?.number as string).toJSON(),
-			})
+			}) as any
 		);
 		const block = data?.blocks?.nodes[0];
 
@@ -23,7 +23,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
 					await store.dispatch(
 						api.endpoints.GetExtrinsicById.initiate({
 							id: node?.id,
-						})
+						}) as any
 					)
 			)
 		);
